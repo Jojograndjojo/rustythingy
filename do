@@ -5,8 +5,6 @@ BUILD_DIR=./build/
 SRC_DIR=./src/
 
 function task_build {
-    rm -rf ${BUILD_DIR}/src
-    rm ${BUILD_DIR}/Cargo.toml
 
     mkdir  ${BUILD_DIR}/src
     cp -r ${SRC_DIR}/* ${BUILD_DIR}/src

@@ -1,5 +1,5 @@
 /target
 **/*.rs.bk
 .idea
-./build/src
-./build/Cargo.toml
+/build/src
+/build/Cargo.toml
