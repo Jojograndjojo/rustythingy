@@ -29,11 +29,11 @@
                     }
                 },
                 "modules": {
-                    "blinkythingy": {
+                    "rustythingy": {
                         "type": "docker",
                         "settings": {
-                            "image": "vpacher/blinkythingy:1.3.21",
-                            "createOptions": "{\"ExposedPorts\":{\"5000/tcp\":{}},\"HostConfig\":{\"Privileged\":true,\"PortBindings\":{\"5000/tcp\":[{\"HostPort\":\"5000\"}]}}}"
+                            "image": "jojograndjojo/rustythingy:0.3",
+                            "createOptions": "{\"ExposedPorts\":{\"8082/tcp\":{}},\"HostConfig\":{\"Privileged\":true,\"PortBindings\":{\"8082/tcp\":[{\"HostPort\":\"8082\"}]}}}"
                         },
                         "status": "running",
                         "restartPolicy": "always",
