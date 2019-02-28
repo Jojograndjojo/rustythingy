@@ -2,7 +2,7 @@ FROM armhf/ubuntu
 
 WORKDIR /usr/src/app
 
-COPY build ./rustythingy
+COPY build/rustythingy ./rustythingy
 RUN chmod +x ./rustythingy
 
 ENV PORT 8082

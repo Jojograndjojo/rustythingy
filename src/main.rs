@@ -61,11 +61,7 @@ impl_web! {
    }
 }
 
-fn blonk() {
-    let led = Led::new(23);
-    led.switch_led_on();
-    ()
-}
+
 
 fn main() {
     let addr = "0.0.0.0:8082".parse().expect("Invalid address");

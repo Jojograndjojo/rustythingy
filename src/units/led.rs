@@ -28,16 +28,16 @@ impl Led {
     pub fn switch_led_on(&self) {
         let led = Pin::new(self.pin_number);
         led.with_exported( || {
-            led.set_direction(Direction::Out);
-            led.set_value(0)
+            led.set_direction(Direction::Low);
+            led.set_value(1)
         });
     }
 
     pub fn switch_led_off(&self) {
         let led = Pin::new(self.pin_number);
         led.with_exported( || {
-            led.set_direction(Direction::Out);
-            led.set_value(1)
+            led.set_direction(Direction::Low);
+            led.set_value(0)
         });
     }
 }
