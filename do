@@ -27,13 +27,13 @@ function task_copy_binaries {
     docker cp ${DOCKER_TAG}:/target/armv7-unknown-linux-gnueabihf/release/rustythingy ${BUILD_DIR}
 }
 
-function delete_compiler_container {
+function task_delete_compiler_container {
     docker stop ${DOCKER_TAG}
     docker rm ${DOCKER_TAG}
 }
 
 function task_usage {
-  echo "Usage: $0 build"
+  echo "Usage: $0 build | build_compiler_image | build_compiler_container | compile | copy_binaries | delete_compiler_container"
 }
 
 CMD=${1:-}
@@ -44,5 +44,6 @@ case ${CMD} in
   build_compiler_container) task_build_compiler_container ;;
   compile) task_compile ;;
   copy_binaries) task_copy_binaries ;;
+  delete_compiler_container) task_delete_compiler_container ;;
   *) task_usage ;;
 esac

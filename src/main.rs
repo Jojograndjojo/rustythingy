@@ -31,7 +31,7 @@ impl_web! {
 
        ///@post("/blink")
        fn blink(&self) -> Result<Response<String>, http::Error> {
-           let led = Led::new(23);
+           let led = Led::new(25);
            led.blink(10000, 250);
 
            Response::builder()
@@ -41,7 +41,7 @@ impl_web! {
 
        ///@post("/led_on")
        fn led_on(&self) -> Result<Response<String>, http::Error> {
-           let led = Led::new(23);
+           let led = Led::new(25);
            led.switch_led_on();
 
            Response::builder()
@@ -51,7 +51,7 @@ impl_web! {
 
        ///@post("/led_off")
        fn led_off(&self) -> Result<Response<String>, http::Error> {
-           let led = Led::new(23);
+           let led = Led::new(25);
            led.switch_led_off();
 
            Response::builder()

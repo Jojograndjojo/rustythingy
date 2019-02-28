@@ -9,8 +9,9 @@ impl Led {
         return Led{pin_number}
     }
 
-    pub fn blink(&self, duration_ms: u64, period_ms: u64) -> sysfs_gpio::Result<()> {
+    pub fn blink(&self, duration_ms: u64, period_ms: u64) {
         let led = Pin::new(self.pin_number);
+
         led.with_exported(|| {
             led.set_direction(Direction::Low)?;
             let iterations = duration_ms / period_ms / 2;
@@ -20,16 +21,17 @@ impl Led {
                 led.set_value(1)?;
                 sleep(Duration::from_millis(period_ms));
             }
-            led.set_value(0)?;
-            Ok(())
-        })
+            led.set_value(0)
+        });
     }
 
     pub fn switch_led_on(&self) {
         let led = Pin::new(self.pin_number);
         led.with_exported( || {
             led.set_direction(Direction::Low);
-            led.set_value(1)
+            led.set_value(1);
+            sleep(Duration::from_millis(2000));
+            Ok(())
         });
     }
 
@@ -37,7 +39,9 @@ impl Led {
         let led = Pin::new(self.pin_number);
         led.with_exported( || {
             led.set_direction(Direction::Low);
-            led.set_value(0)
+            led.set_value(0);
+            sleep(Duration::from_millis(2000));
+            Ok(())
         });
     }
 }
