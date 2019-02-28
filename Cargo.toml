@@ -1,0 +1,7 @@
+[package]
+name = "rustythingy"
+version = "0.1.0"
+authors = ["jonathan <jpasse@thoughtworks.com>"]
+edition = "2018"
+
+[dependencies]
