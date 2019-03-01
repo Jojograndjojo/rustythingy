@@ -15,15 +15,15 @@ struct PinSpy {
 
 }
 #[derive(Clone,Debug)]
-struct PinMock {
+pub struct PinMock {
     spy_id: String,
 }
 
-struct PinMockGenerator {
+pub struct PinMockGenerator {
 }
 
 impl PinMockGenerator {
-    fn generate_mock(&mut self) -> PinMock {
+    pub fn generate_mock(&mut self) -> PinMock {
         let id = generate_spy_id();
         let id_clone = id.clone();
 
@@ -34,9 +34,6 @@ impl PinMockGenerator {
         return pin_mock
     }
 
-    fn clear_spies(&mut self) {
-         PINMOCK_GENERATOR.lock().unwrap() =  Mutex::new(HashMap::new());
-    }
 
 }
 
@@ -45,8 +42,9 @@ impl PinInterface for PinMock {
         let spy_id = self.spy_id.as_str();
         let mut spy_map = PINMOCK_GENERATOR.lock().unwrap();
         let mut spy = spy_map.get(spy_id).unwrap().lock().unwrap();
+        spy.transmit_calls +=1;
 
-        match spy.transmit_results[spy.transmit_calls] {
+        match spy.transmit_results[spy.transmit_calls -1 ] {
             Ok(_) => Ok(()),
             Err(_) => Err(Error::new(ErrorKind::Other,"error returned by mock")),
         }
@@ -60,6 +58,14 @@ impl PinMock {
         let mut spy = spy_map.get(spy_id).unwrap().lock().unwrap();
 
         spy.transmit_results.push(result);
+    }
+
+    pub fn verify_transmit_calls_has_been_called (&self, calls: usize) -> bool {
+        let spy_id = self.spy_id.as_str();
+        let mut spy_map = PINMOCK_GENERATOR.lock().unwrap();
+        let mut spy = spy_map.get(spy_id).unwrap().lock().unwrap();
+
+        return spy.transmit_calls == calls
     }
 }
 

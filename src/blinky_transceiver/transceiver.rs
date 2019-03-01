@@ -1,11 +1,15 @@
 use sysfs_gpio::Pin;
+use super::pin_mock::{PinMockGenerator,PinMock};
+use super::pin_interface::PinInterface;
 
 
 pub struct Transceiver {
 }
 
 impl Transceiver {
-
+    fn trigger(&self, pin: &impl PinInterface, pin_number: u64, duration_ms: u64 ) {
+        pin.transmit(pin_number, duration_ms);
+    }
 }
 
 mod test {
@@ -13,9 +17,14 @@ mod test {
 
     #[test]
     fn should_transmit_message() {
-        let pin_number = 1;
+        let mut mock_generator = PinMockGenerator{};
+        let pin = mock_generator.generate_mock();
+        pin.when_transmit_called_return(Ok(()));
+
         let transceiver = Transceiver{};
-        transceiver.trigger()
+        transceiver.trigger(&pin,1,1);
+
+        assert!(pin.verify_transmit_calls_has_been_called(1))
     }
 
 }
