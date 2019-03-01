@@ -21,6 +21,10 @@ use std::thread::sleep;
 use std::time::Duration;
 use std::io::Error;
 
+const RED_LIGHT_PIN: u64 = 23;
+const GREEN_LIGHT_PIN: u64 = 25;
+const SHOCK_SENSOR_TRIGGER_PIN: u64 = 18;
+const SHOCK_SENSOR_ECHO_PIN: u64 = 24;
 
 
 struct Endpoint;
@@ -47,8 +51,7 @@ impl_web! {
 
        ///@post("/green_led_on")
        fn led_on(&self) -> Result<Response<String>, http::Error> {
-           let led = Led::new(25);
-           led.switch_led_on();
+           send_signal_to_pin(GREEN_LIGHT_PIN, 1, 2000)
 
            Response::builder()
                .status(200)
@@ -57,9 +60,7 @@ impl_web! {
 
        ///@post("/red_led_on")
        fn new_led_on(&self) -> Result<Response<String>, http::Error> {
-           let pin = Pin::new(23);
-           let transceiver = Transceiver{};
-           transceiver.trigger(&pin, 1, 2000);
+           send_signal_to_pin(RED_LIGHT_PIN, 1, 2000);
 
            Response::builder()
                .status(200)
@@ -68,6 +69,11 @@ impl_web! {
    }
 }
 
+fn send_signal_to_pin(pin_num: u64, value: u8, duration_ms: u64) {
+    let pin = Pin::new(pin_num);
+    let transceiver = Transceiver{};
+    transceiver.trigger(&pin, value, duration_ms);
+}
 
 
 fn main() {
