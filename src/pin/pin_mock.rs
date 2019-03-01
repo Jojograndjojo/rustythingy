@@ -33,8 +33,6 @@ impl PinMockGenerator {
         store_spy(id, spy);
         return pin_mock
     }
-
-
 }
 
 impl PinInterface for PinMock {
