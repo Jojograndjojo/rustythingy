@@ -34,6 +34,10 @@ impl PinMockGenerator {
         return pin_mock
     }
 
+    fn clear_spies(&mut self) {
+         PINMOCK_GENERATOR.lock().unwrap() =  Mutex::new(HashMap::new());
+    }
+
 }
 
 impl PinInterface for PinMock {
