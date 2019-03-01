@@ -12,6 +12,7 @@ extern crate rand;
 extern crate lazy_static;
 
 use units::led::Led;
+use blinky_transceiver::transceiver::Transceiver;
 
 use tower_web::ServiceBuilder;
 use http::Response;
@@ -41,27 +42,28 @@ impl_web! {
 
            Response::builder()
                .status(200)
-               .body("units should be blinking".to_string())
+               .body("green led should be blinking".to_string())
        }
 
-       ///@post("/led_on")
+       ///@post("/green_led_on")
        fn led_on(&self) -> Result<Response<String>, http::Error> {
            let led = Led::new(25);
            led.switch_led_on();
 
            Response::builder()
                .status(200)
-               .body("units should be on".to_string())
+               .body("green led should be on".to_string())
        }
 
-       ///@post("/led_off")
-       fn led_off(&self) -> Result<Response<String>, http::Error> {
-           let led = Led::new(25);
-           led.switch_led_off();
+       ///@post("/red_led_on")
+       fn new_led_on(&self) -> Result<Response<String>, http::Error> {
+           let pin = Pin::new(23);
+           let transceiver = Transceiver{};
+           transceiver.trigger(&pin, 2000);
 
            Response::builder()
                .status(200)
-               .body("units should be off".to_string())
+               .body("red led should be on".to_string())
        }
    }
 }

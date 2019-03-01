@@ -7,8 +7,8 @@ pub struct Transceiver {
 }
 
 impl Transceiver {
-    fn trigger(&self, pin: &impl PinInterface, pin_number: u64, duration_ms: u64 ) {
-        pin.transmit(pin_number, duration_ms);
+    pub fn trigger(&self, pin: &impl PinInterface, duration_ms: u64 ) {
+        pin.transmit(duration_ms);
     }
 }
 
@@ -22,7 +22,7 @@ mod test {
         pin.when_transmit_called_return(Ok(()));
 
         let transceiver = Transceiver{};
-        transceiver.trigger(&pin,1,1);
+        transceiver.trigger(&pin,10);
 
         assert!(pin.verify_transmit_calls_has_been_called(1))
     }

@@ -36,7 +36,7 @@ impl PinMockGenerator {
 }
 
 impl PinInterface for PinMock {
-    fn transmit(&self, _pin_number: u64, _duration_ms: u64) -> Result<(), Error> {
+    fn transmit(&self, _duration_ms: u64) -> Result<(), Error> {
         let spy_id = self.spy_id.as_str();
         let mut spy_map = PINMOCK_GENERATOR.lock().unwrap();
         let mut spy = spy_map.get(spy_id).unwrap().lock().unwrap();
