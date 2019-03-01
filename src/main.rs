@@ -51,7 +51,7 @@ impl_web! {
 
        ///@post("/green_led_on")
        fn led_on(&self) -> Result<Response<String>, http::Error> {
-           send_signal_to_pin(GREEN_LIGHT_PIN, 1, 2000)
+           send_signal_to_pin(GREEN_LIGHT_PIN, 1, 2000);
 
            Response::builder()
                .status(200)
