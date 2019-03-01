@@ -6,11 +6,11 @@ use std::io::Error;
 
 
 impl PinInterface for Pin {
-    fn transmit(&self, duration_ms: u64) -> Result<(), Error> {
+    fn transmit(&self, value: u8, duration_ms: u64) -> Result<(), Error> {
         self.with_exported( || {
             self.set_direction(Direction::Low);
-            self.set_value(1);
-            sleep(Duration::from_millis(2000));
+            self.set_value(value);
+            sleep(Duration::from_millis(duration_ms));
             Ok(())
         });
         Ok(())

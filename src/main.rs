@@ -59,7 +59,7 @@ impl_web! {
        fn new_led_on(&self) -> Result<Response<String>, http::Error> {
            let pin = Pin::new(23);
            let transceiver = Transceiver{};
-           transceiver.trigger(&pin, 2000);
+           transceiver.trigger(&pin, 1, 2000);
 
            Response::builder()
                .status(200)
