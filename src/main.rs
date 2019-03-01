@@ -1,10 +1,15 @@
 mod units;
+mod blinky_transceiver;
+mod pin;
 
 #[macro_use]
 extern crate sysfs_gpio;
-
 #[macro_use]
 extern crate tower_web;
+#[macro_use]
+extern crate rand;
+#[macro_use]
+extern crate lazy_static;
 
 use units::led::Led;
 
