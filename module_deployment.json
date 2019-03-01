@@ -32,7 +32,7 @@
                     "rustythingy": {
                         "type": "docker",
                         "settings": {
-                            "image": "jojograndjojo/rustythingy:0.9",
+                            "image": "jojograndjojo/rustythingy:1.0",
                             "createOptions": "{\"ExposedPorts\":{\"8082/tcp\":{}},\"HostConfig\":{\"Privileged\":true,\"PortBindings\":{\"8082/tcp\":[{\"HostPort\":\"8082\"}]}}}"
                         },
                         "status": "running",
