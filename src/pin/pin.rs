@@ -16,3 +16,9 @@ impl PinInterface for Pin {
         Ok(())
     }
 }
+
+fn gggg() {
+    let pin = Pin::new(7);
+    let poller = pin.get_poller().unwrap();
+    poller.poll();
+}
