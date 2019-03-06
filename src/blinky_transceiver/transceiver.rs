@@ -1,5 +1,5 @@
-use sysfs_gpio::Pin;
-use super::pin_mock::{PinMockGenerator,PinMock};
+use std::io::{Error, ErrorKind};
+use super::pin_mock::PinMockGenerator;
 use super::pin_interface::PinInterface;
 
 
@@ -7,8 +7,18 @@ pub struct Transceiver {
 }
 
 impl Transceiver {
-    pub fn trigger(&self, pin: &impl PinInterface, value: u8, duration_ms: u64 ) {
-        pin.transmit(value, duration_ms);
+    pub fn trigger(&self, pin: &impl PinInterface, value: u8, duration_ms: u64 ) -> Result<(), Error> {
+        match pin.transmit(value, duration_ms) {
+            Ok(()) => Ok(()),
+            Err(e) => Err(e)
+        }
+    }
+
+    pub fn echo(&self, pin: &impl PinInterface, timeout_ms: isize) -> Result<u8, Error> {
+        match pin.read(timeout_ms) {
+            Some(value) => Ok(value),
+            None => Err(Error::new(ErrorKind::Other,"no value transmitted"))
+        }
     }
 }
 
@@ -22,9 +32,24 @@ mod test {
         pin.when_transmit_called_return(Ok(()));
 
         let transceiver = Transceiver{};
-        transceiver.trigger(&pin,10, 10);
+        let result = transceiver.trigger(&pin,10, 10);
 
-        assert!(pin.verify_transmit_calls_has_been_called(1))
+        assert!(pin.verify_transmit_calls_has_been_called(1));
+        assert!(!result.is_err())
+    }
+
+    #[test]
+    fn should_poll_message() {
+        let mut mock_generator = PinMockGenerator{};
+        let pin = mock_generator.generate_mock();
+        let pin_response = 1;
+        pin.when_read_called_return(Some(pin_response));
+
+        let transceiver = Transceiver{};
+        let result = transceiver.echo(&pin, 100).unwrap();
+
+        assert!(pin.verify_read_calls_has_been_called(1));
+        assert_eq!(result, pin_response)
     }
 
 }
