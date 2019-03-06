@@ -5,7 +5,7 @@ use std::sync::Mutex;
 use rand::Rng;
 
 lazy_static! {
-    static ref PINMOCK_GENERATOR: Mutex<HashMap<String,Mutex<PinSpy>>> =  Mutex::new(HashMap::new());
+    static ref PINSPIES: Mutex<HashMap<String,Mutex<PinSpy>>> =  Mutex::new(HashMap::new());
 }
 
 #[derive(Debug)]
@@ -51,7 +51,7 @@ impl PinMockGenerator {
 impl PinInterface for PinMock {
     fn transmit(&self, _value: u8, _duration_ms: u64) -> Result<(), Error> {
         let spy_id = self.spy_id.as_str();
-        let spy_map = PINMOCK_GENERATOR.lock().unwrap();
+        let spy_map = PINSPIES.lock().unwrap();
         let mut spy = spy_map.get(spy_id).unwrap().lock().unwrap();
         spy.transmit_calls +=1;
 
@@ -63,7 +63,7 @@ impl PinInterface for PinMock {
 
     fn read(&self, _timeout_ms: isize) -> Option<u8> {
         let spy_id = self.spy_id.as_str();
-        let spy_map = PINMOCK_GENERATOR.lock().unwrap();
+        let spy_map = PINSPIES.lock().unwrap();
         let mut spy = spy_map.get(spy_id).unwrap().lock().unwrap();
         spy.read_calls +=1;
 
@@ -74,7 +74,7 @@ impl PinInterface for PinMock {
 impl PinMock {
     pub fn when_transmit_called_return(&self, result: Result<(),Error>) {
         let spy_id = self.spy_id.as_str();
-        let spy_map = PINMOCK_GENERATOR.lock().unwrap();
+        let spy_map = PINSPIES.lock().unwrap();
         let mut spy = spy_map.get(spy_id).unwrap().lock().unwrap();
 
 
@@ -83,7 +83,7 @@ impl PinMock {
 
     pub fn when_read_called_return(&self, result: Option<u8>) {
         let spy_id = self.spy_id.as_str();
-        let spy_map = PINMOCK_GENERATOR.lock().unwrap();
+        let spy_map = PINSPIES.lock().unwrap();
         let mut spy = spy_map.get(spy_id).unwrap().lock().unwrap();
 
         spy.read_results.push(result);
@@ -91,7 +91,7 @@ impl PinMock {
 
     pub fn verify_transmit_calls_has_been_called(&self, calls: usize) -> bool {
         let spy_id = self.spy_id.as_str();
-        let spy_map = PINMOCK_GENERATOR.lock().unwrap();
+        let spy_map = PINSPIES.lock().unwrap();
         let spy = spy_map.get(spy_id).unwrap().lock().unwrap();
 
         return spy.transmit_calls == calls
@@ -99,7 +99,7 @@ impl PinMock {
 
     pub fn verify_read_calls_has_been_called(&self, calls: usize) -> bool {
         let spy_id = self.spy_id.as_str();
-        let spy_map = PINMOCK_GENERATOR.lock().unwrap();
+        let spy_map = PINSPIES.lock().unwrap();
         let spy = spy_map.get(spy_id).unwrap().lock().unwrap();
 
         return spy.read_calls == calls
@@ -108,11 +108,9 @@ impl PinMock {
 }
 
 fn store_spy(spy_id: String, spy: PinSpy) {
-    let mut spy_map = PINMOCK_GENERATOR.lock().unwrap();
+    let mut spy_map = PINSPIES.lock().unwrap();
     spy_map.insert(spy_id, Mutex::new(spy));
 }
-
-
 
 
 fn generate_spy_id() -> String {
