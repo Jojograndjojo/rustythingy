@@ -56,9 +56,9 @@ impl SonarInterface for SonarMock {
         let spy_id = self.spy_id.as_str();
         let spy_map = SONAR_SPIES.lock().unwrap();
         let mut spy = spy_map.get(spy_id).unwrap().lock().unwrap();
-        spy.trigger_calls +=1;
+        spy.distance_to_obstacle_cm_calls +=1;
 
-        match spy.trigger_results[spy.trigger_calls -1 ] {
+        match spy.distance_to_obstacle_cm_results[spy.distance_to_obstacle_cm_calls -1 ] {
             Ok(value) => Ok(value),
             Err(_) => Err(Error::new(ErrorKind::Other,"error returned by mock")),
         }
@@ -83,8 +83,8 @@ impl SonarMock {
     }
 }
 
-fn store_spy(spy_id: String, spy: TransceiverSpy) {
-    let mut spy_map =  TRANSCEIVER_SPIES.lock().unwrap();
+fn store_spy(spy_id: String, spy: SonarSpy) {
+    let mut spy_map =  SONAR_SPIES.lock().unwrap();
     spy_map.insert(spy_id, Mutex::new(spy));
 }
 

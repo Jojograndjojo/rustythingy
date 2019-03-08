@@ -1,20 +1,21 @@
 use std::io::{Error, ErrorKind};
 use super::pin_mock::PinMockGenerator;
 use super::pin_interface::PinInterface;
+use super::transceiver_interface::TransceiverInterface;
 
 
 pub struct Transceiver {
 }
 
-impl Transceiver {
-    pub fn trigger(&self, pin: &impl PinInterface, value: u8, duration_ms: u64 ) -> Result<(), Error> {
+impl TransceiverInterface for Transceiver {
+    fn trigger(&self, pin: &impl PinInterface, value: u8, duration_ms: u64 ) -> Result<(), Error> {
         match pin.transmit(value, duration_ms) {
             Ok(()) => Ok(()),
             Err(e) => Err(e)
         }
     }
 
-    pub fn echo(&self, pin: &impl PinInterface, timeout_ms: isize) -> Result<u8, Error> {
+    fn echo(&self, pin: &impl PinInterface, timeout_ms: isize) -> Result<u8, Error> {
         match pin.read(timeout_ms) {
             Some(value) => Ok(value),
             None => Err(Error::new(ErrorKind::Other,"no value transmitted"))

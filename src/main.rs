@@ -13,6 +13,7 @@ use sysfs_gpio::Pin;
 use std::thread;
 use std::time::Duration;
 use crate::sonar::sonar_interface::SonarInterface;
+use crate::transceiver::transceiver_interface::TransceiverInterface;
 
 
 // cm/secs
@@ -40,7 +41,10 @@ fn manage_lights() {
 
     match sonar.distance_to_obstacle_cm(&shock_trigger_pin, &shock_echo_pin, &transceiver) {
         Ok(value) => distance = value,
-        Err(_) => println!("sonar failed to detect obstacle")
+        Err(_) => {
+            println!("sonar failed to detect obstacle");
+            return
+        }
     }
 
     match distance <= OBSTACLE_MIN_DISTANCE {
@@ -54,7 +58,7 @@ fn manage_lights() {
         }
     }
 
-    transceiver.trigger(red_light_pin, red_light_pin_value, 500);
+    transceiver.trigger(&red_light_pin, red_light_pin_value, 500);
 }
 
 
