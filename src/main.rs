@@ -39,36 +39,36 @@ fn manage_lights() {
 
     let mut  distance;
 
-    match sonar.distance_to_obstacle_cm(&shock_trigger_pin, &shock_echo_pin, &transceiver) {
-        Ok(value) => distance = value,
-        Err(_) => {
-            println!("sonar failed to detect obstacle");
-            return
+    loop {
+        match sonar.distance_to_obstacle_cm(&shock_trigger_pin, &shock_echo_pin, &transceiver) {
+            Ok(value) => distance = value,
+            Err(_) => {
+                println!("sonar failed to detect obstacle");
+                return
+            }
         }
+
+        match distance <= OBSTACLE_MIN_DISTANCE {
+            true => {
+                green_light_pin_value = 0;
+                red_light_pin_value = 1;
+            }
+            false => {
+                green_light_pin_value = 1;
+                red_light_pin_value = 0;
+            }
+        }
+
+        transceiver.trigger(&red_light_pin, red_light_pin_value, 500);
+
+        thread::sleep(Duration::from_millis(250));
     }
 
-    match distance <= OBSTACLE_MIN_DISTANCE {
-        true => {
-            green_light_pin_value = 0;
-            red_light_pin_value = 1;
-        }
-        false => {
-            green_light_pin_value = 1;
-            red_light_pin_value = 0;
-        }
-    }
-
-    transceiver.trigger(&red_light_pin, red_light_pin_value, 500);
 }
 
 
 
 
 fn main() {
-
-    loop {
-        manage_lights();
-        thread::sleep(Duration::from_millis(250))
-    }
-
+    manage_lights();
 }
